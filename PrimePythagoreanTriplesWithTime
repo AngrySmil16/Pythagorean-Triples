@@ -1,0 +1,107 @@
+#Import math library
+import math, sys
+from datetime import datetime
+
+#Introduction
+deco = "*" * 150
+print(f'''
+{deco}
+
+    (ENG) Welcome! This program (made by Manauzzi Stefano) allows you to get all Pythagorean triples from 
+    0 to a number you'll choose. You can also switch between the "STANDARD MODE" (S) and the "ONLY PRIMES
+    MODE" (P), that will shows you only the primes triples (the ones without any common divisor).
+
+    P.S. - Don't exagerate because a limit of 100 means 10.000.000 operations, a limit of 1000 means 
+    10.000.000.000 operations, 10000 means 10.000.000.000.000 and so on...
+
+
+    (ITA) Benvenuto! Questo programma (realizzato da Manauzzi Stefano) ti permette di conoscere tutte le
+    Terne Pitagoriche da 0 al numero che sceglierai. Puoi, inoltre, selezionare la modalità "STANDARD" (S)
+    o la modalità "SOLO PRIMI" (P), che ti mostrerà solamente le terne prime, vale a dire quelle senza
+    alcun divisore comune oltre ad 1.
+
+    P.S. - Non esagerare, però, perché un limite di 100 significherà 10.000.000 operazioni, con 1.000 se
+    ne raggiungeranno 10.000.000.000 e già 10.000 innalzerebbe il numero a 10.000.000.000.000 (giorni di
+    calcolo) e così via...
+
+{deco}''')
+
+### MAIN LOOP ###
+while True:
+
+    #Setup variables
+    limit = 0 #The limit is initially 0
+    onlyPrime = False #Generally it will shows all the triples, not only the prime ones.
+    Pythagoras = [] #The list "P"
+
+    #Input the mode
+    while True:
+        modeInfo = input("\n  Choose the mode / Scegli la modalità: STANDARD (S) - PRIMES ONLY (P) --> ")
+        try:
+            modeInfo = modeInfo.upper()[0]
+            if modeInfo == "S":
+                onlyPrime = False
+                break
+            elif modeInfo == "P":
+                onlyPrime = True
+                break
+            else:
+                continue
+        except Exception as e:
+            continue
+
+    #Input the limit number
+    while True:
+        try:
+            limit = input("\n  Choose a natural number as limit (Scegli un numero naturale come limite) -->  ")
+            limit = abs(int(float(limit))) + 1
+        except Exception as e:
+            continue
+        break
+
+    ### MAIN FUNCTION ###
+    startTime = datetime.now()
+    for a in range(limit): #Choose three variables a, b, c
+        for b in range(limit):
+            for c in range(limit):
+                #To avoid repetition and help the poor pc, "a < b < c" must be true
+                if a < b < c:
+                    #Verify Euclidean / Pythagorean Theoreme
+                    if a ** 2 + b ** 2 == c ** 2:
+                        #Add the Pythagorean triple (terna Pitagorica) to triples' list
+                        Pythagoras.append([a,b,c])
+
+    #Sort the list
+    Pythagoras.sort()
+
+    #Choose only prime triples if onlyPrime is true
+    if onlyPrime:
+        for triple in Pythagoras[:]:
+            MCD = 1
+            a = triple[0]
+            b = triple[1]
+            c = triple[2]
+            MCD = math.gcd(math.gcd(a,b), c)
+            newTriple = [a/MCD, b/MCD, c/MCD]
+            if newTriple in Pythagoras and newTriple != triple:
+                Pythagoras.remove(triple)
+
+    #Show the list and visual adjustments
+    print("")
+    for index in range(len(Pythagoras)-1):
+        print(f" ({index}) {Pythagoras[index][0]}, {Pythagoras[index][1]}, {Pythagoras[index][2]}")
+    print("\n Time Spent (Tempo impiegato): " + str(datetime.now() - startTime))
+
+    #Continue or not?
+    while True:
+        finalDecision = input("\n  (ENG) Do you want restart with an other mode or limit (Y/N)? \n  (ITA) Vuoi ritentare con un'altra modalità o un altro limite (S/N)?  -->  ")
+        try:
+            finalDecision = finalDecision.upper()[0]
+            if finalDecision == "Y" or finalDecision == "S":
+                print(f"\n{deco}")
+                break
+            elif finalDecision == "N":
+                print(f"\n{deco}\n\n    (ENG) Ok. Goodbye!\n    (ITA) Ok. Arrivederci!\n\n{deco}")
+                sys.exit()
+        except Exception:
+            continue
